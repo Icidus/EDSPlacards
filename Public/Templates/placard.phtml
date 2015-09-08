@@ -1,0 +1,55 @@
+{%if search and (data is not empty or fa.numberofresults > 0 or lg is not empty)%}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{data.name}} : {{data.type}} : Smith Libraries</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/journal/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style>
+	html, body { 
+		padding:0 !important; 
+		margin:0 !important;
+	} 
+	</style> 
+</head>
+<body>
+<div id="placard" class="well" style="overflow:scroll;">
+	<div class="row">
+		{%if data is not empty%}
+		<div class="col-md-4">
+			<h4>Journals - {{data.name}}</h4>
+			<ul class="list">
+            	<li><a data-role="electronic" href="{{data.electronic_link}}" target="_blank">Find full text online of <em>{{data.name}}</em></a></li>          
+				<li><a data-role="print" href="{{data.print_link}}" target="_blank">Check Five College print holdings for <em>{{data.name}}</em></a></li>
+			</ul>
+    	</div>
+    	{%endif%}
+    	{%if fa.numberofresults > 0%}
+    	<div class="col-md-4">
+	    	<h4>Finding Aids</h4>
+	    	<ul class="list">
+		    	<li>Number of Results : {{fa.numberofresults}}</li>
+		    	<li><a href="{{fa.linktosearch}}" target="_blank">Access Finding Aids</li>
+	    	</ul>
+    	</div>
+    	{%endif%}
+    	{%if lg is not empty%}
+    	<div class="col-md-4">
+	    	<h4>Guides</h4>
+	    	<ul class="list">
+		    	{%for items in lg%}
+		    		<a href="{{items.url}}" target="_blank"><li>{{items.name}}</li></a>
+		    	{%endfor%}
+		    		<a href="http://libguides.smith.edu/srch.php?q={{search}}" target="_blank"><li>more..</li></a>
+	    	</ul>
+		</div>
+	</div>   
+</div>
+{%endif%}
+</body>
+</html>
+{%endif%}

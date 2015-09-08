@@ -1,0 +1,95 @@
+<div id="analysis" style="font-family:helvetica, verdana, tahoma;font-size:12px"><center>This widget is evaluating the search term </center></div>
+<div id="mysearch" style="display:none">ep.SearchTerm</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+// functions
+function CleanSearchTerm(strTerm) {
+    strTerm = strTerm.toLowerCase();
+
+    // strip the word "journal" from search terms - all these searches are for journals
+    strTerm = strTerm.replace('journal','');
+
+    // TI and AU prefixes exist at this point - so lets strip out TI if it starts the phrase
+    if (strTerm.indexOf("ti ") === 0) {
+        strTerm = strTerm.replace('ti ','');
+    }
+
+    // Trim leading/trailing spaces
+    strTerm = strTerm.trim();
+    
+    strTerm = strTerm.replace(' ', '+');
+    
+    return strTerm;
+}
+
+function NoPlacard() {
+    $('.related-info-area:contains("Placard (iframe) - journals")', window.parent.document).css('display','none');
+}
+
+// Main body of script
+var searchterm = document.getElementById('mysearch').innerHTML;
+searchterm = CleanSearchTerm(searchterm); 
+var url =  'https://libtools.smith.edu/eds/search/' + searchterm + '';
+$.getJSON(url + "?callback=?", null, function(data) {
+	var b = "";
+        var c = "";
+    //   for(i in data) {
+      //      data = data[i];
+       console.log(data);     
+//    if (subject.name.toLowerCase() === searchterm.toLowerCase()){
+	if(data.journals || data.faids.numberofresults > 0 || data.libguides[0]){
+	b += '<div id="placard" class="well">';
+	b += '<div class="container-fluid">';
+	b += '<div class="row">';
+	if(data.journals) {
+		b += '<div class="col-xs-6 col-sm-3">';
+		b += '<h4>Journals - '+data.journals.name+'</h4>';
+		b +=   '<div class="search-column">';
+		b +=	'<ul class="list">';
+        b +=    '<li><a data-role="electronic" href="'+data.journals.electronic_link+'" onclick="trackOutboundLink(\''+data.journals.electronic_link+'\'); return false;" target="_blank">Find full text online of <em>'+data.journals.name+'</em></a></li>';          
+		b +=	'<li><a data-role="print" href="'+data.journals.print_link+'" onclick="trackOutboundLink(\''+data.journals.print_link+'\'); return false;" target="_blank">Check Five College print holdings for <em>'+data.journals.name+'</em></a></li>';
+		b +=	'</ul>';
+		b += '</div>';
+    	b += '</div>';
+    }
+    if(data.faids.numberofresults > 0) {
+    	b += '<div class="col-xs-6 col-sm-3">';
+	    b += '<h4>Archives</h4>';
+	    b +=   '<div class="search-column">';
+	    b +=	'<ul class="list">';
+		b +=    	'<li>Number of Results : '+data.faids.numberofresults+'</li>';
+		b +=    	'<li><a href="'+data.faids.linktosearch+'" target="_blank" onclick="trackOutboundLink(\''+data.faids.linktosearch+'\'); return false;">Access Finding Aids</a></li>';
+	    b +=	'</ul>';
+	    b += '</div>';
+    	b += '</div>';
+    	}
+    	if(data.libguides[0]){
+    	b += '<div class="col-xs-6 col-sm-3">';
+	    b += '	<h4>Research Guides</h4>';
+	    b +=   '<div class="search-column">';
+	    b +=	'<ul class="list">';
+		$.each(data.libguides, function(i, results) {
+			b +=	'<li><a href="'+results.url+'" onclick="trackOutboundLink(\''+results.url+'\'); return false;" target="_blank">'+results.name+'</a></li>';
+		})	
+	    b += '<li><a href="http://libguides.smith.edu/srch.php?q='+data.name+'" onclick="trackOutboundLink(\'http://libguides.smith.edu/srch.php?q='+data.name+'\'); return false;" target="_blank">more..</a></li>';
+	    b += '</ul>';
+	    b += '</div>';
+		b += '</div>';
+		}
+		b += '</div>';
+		b += '</div>';   
+		b += '</div>';
+	}		
+
+    $('.result-list', window.parent.document).before($(b).fadeIn());
+
+
+    $('.related-info-area:contains("Placard (iframe) - journals")', window.parent.document).css('display','none'); 
+});
+
+
+   //var resultdiv1 = '<iframe id="smith_iframe" scrolling="no" src="https://libtools.smith.edu/eds/search/' + searchterm + '" width="100%" height="100%" padding="0px"></iframe>';
+
+</script>
