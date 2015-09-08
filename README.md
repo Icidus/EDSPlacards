@@ -11,7 +11,7 @@
 
 <h2>Setup</h2>
 <ol>
-<li>Create a folder at the the root of your Apache web directory labeled eds</li>
+<li>Create a folder at the the root of your Apache web directory labeled eds copy the above code into it.  The htaccess file is required so make sure it is there.</li>
 </ol>
 
 <h2>Setting up - Single word journals</h2>
